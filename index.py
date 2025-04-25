@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
-from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.document_loaders import DirectoryLoader, TextLoader,PDFMinerLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.schema.output_parser import StrOutputParser
@@ -26,7 +26,7 @@ class RAGSystem:
         """Load documents from the docs directory"""
         print("Loading documents...")
         try:
-            loader = DirectoryLoader(self.docs_dir, glob="**/*.txt", loader_cls=TextLoader)
+            loader = DirectoryLoader(self.docs_dir, glob="**/*.pdf", loader_cls=PDFMinerLoader)
             documents = loader.load()
             print(f"Loaded {len(documents)} documents")
             return documents
@@ -54,10 +54,10 @@ class RAGSystem:
         print("Vector store created successfully")
         return vector_store
     
-    def initialize_llm(self, model_name="gpt-3.5-turbo"):
+    def initialize_llm(self, model_name="gemini-1.5-pro"):
         """Initialize the language model"""
-        print(f"Initializing LLM with {model_name}...")
-        self.llm = ChatOpenAI(model_name=model_name)
+        print(f"Initializing Gemini LLM with {model_name}...")
+        self.llm = ChatGoogleGenerativeAI(model=model_name)
         
     def setup_rag_pipeline(self):
         """Set up the RAG pipeline with retriever and prompt template"""
@@ -72,7 +72,9 @@ class RAGSystem:
         {context}
         
         Question: {question}
-        
+
+        Important: Include the relevant source document file names and page numbers in your answer.
+
         Answer:"""
         
         prompt = ChatPromptTemplate.from_template(template)
@@ -96,7 +98,7 @@ class RAGSystem:
         response = rag_chain.invoke(query)
         return response
         
-    def build_rag_system(self, model_name="gpt-3.5-turbo"):
+    def build_rag_system(self, model_name="gemini-1.5-pro"):
         """Complete pipeline to build the RAG system"""
         documents = self.load_documents()
         if not documents:
