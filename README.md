@@ -6,7 +6,9 @@ This project implements a Retrieval-Augmented Generation (RAG) system using the 
 
 - **PDF Document Support**: Automatically loads and processes PDF files from the `docs` directory.
 - **Chunking**: Splits documents into manageable chunks for efficient retrieval.
-- **Vector Store**: Creates a vector store using FAISS for fast similarity search.
+- **Vector Store Options**:
+  - **FAISS**: Creates a vector store using FAISS for fast similarity search.
+  - **ChromaDB**: Creates a vector store using ChromaDB for persistent and flexible similarity search.
 - **Google Gemini API**: Uses the Gemini language model for generating responses.
 - **Source References**: Includes file names and page numbers in the responses for better traceability.
 
@@ -39,6 +41,8 @@ This project implements a Retrieval-Augmented Generation (RAG) system using the 
 
 ## Usage
 
+# FAISS-based RAG System
+
 1. Place your PDF files in the `docs` directory.
 
 2. Run the script:
@@ -51,9 +55,17 @@ This project implements a Retrieval-Augmented Generation (RAG) system using the 
 
 4. To exit, type `quit` or `exit`.
 
+# ChromaDB-based RAG System
+
+- same as above, just in step 2, run the following command instead:
+  `bash
+  python rag-chromadb.py
+  `
+
 ## Project Structure
 
-- `index.py`: Main script containing the RAG system implementation.
+- `index.py`: Main script containing the RAG system implementation using FAISS.
+- `rag-chromadb.py`: Main script for the ChromaDB-based RAG system.
 - `docs/`: Directory to store PDF files for processing.
 - `.env`: Environment file for storing API keys.
 - `requirements.txt`: List of dependencies.
@@ -64,7 +76,8 @@ This project implements a Retrieval-Augmented Generation (RAG) system using the 
 
 - **`load_documents`**: Loads PDF files from the `docs` directory.
 - **`split_documents`**: Splits documents into smaller chunks for processing.
-- **`create_vector_store`**: Creates a FAISS vector store for similarity search.
+- **`create_vector_store`**: Creates a FAISS or ChromaDB
+  vector store for similarity search.
 - **`initialize_llm`**: Initializes the Google Gemini language model.
 - **`setup_rag_pipeline`**: Sets up the RAG pipeline with retriever and prompt template.
 - **`process_query`**: Processes user queries and generates responses.
