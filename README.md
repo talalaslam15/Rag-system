@@ -58,9 +58,9 @@ This project implements a Retrieval-Augmented Generation (RAG) system using the 
 # ChromaDB-based RAG System
 
 - same as above, just in step 2, run the following command instead:
-  `bash
+  ```bash
   python rag-chromadb.py
-  `
+  ```
 
 ## Project Structure
 
