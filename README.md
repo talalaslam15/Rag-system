@@ -26,13 +26,35 @@ This project implements a Retrieval-Augmented Generation (RAG) system using the 
    cd <repository-folder>
    ```
 
-2. Install the required dependencies:
+2. Create and activate a virtual environment (recommended):
+
+   **For Windows:**
+
+   ```powershell
+   # Create virtual environment
+   python -m venv venv
+
+   # Activate virtual environment
+   .\venv\Scripts\Activate.ps1
+   ```
+
+   **For macOS/Linux:**
+
+   ```bash
+   # Create virtual environment
+   python -m venv venv
+
+   # Activate virtual environment
+   source venv/bin/activate
+   ```
+
+3. Install the required dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Set up your environment variables:
+4. Set up your environment variables:
    - Create a `.env` file in the root directory.
    - Add your Google Gemini API key:
      ```
