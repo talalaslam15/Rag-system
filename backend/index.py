@@ -54,7 +54,7 @@ class RAGSystem:
         print("Vector store created successfully")
         return vector_store
     
-    def initialize_llm(self, model_name="gemini-1.5-pro"):
+    def initialize_llm(self, model_name="gemini-2.5-pro"):
         """Initialize the language model"""
         print(f"Initializing Gemini LLM with {model_name}...")
         self.llm = ChatGoogleGenerativeAI(model=model_name)
@@ -98,7 +98,7 @@ class RAGSystem:
         response = rag_chain.invoke(query)
         return response
         
-    def build_rag_system(self, model_name="gemini-1.5-pro"):
+    def build_rag_system(self, model_name="gemini-2.5-pro"):
         """Complete pipeline to build the RAG system"""
         documents = self.load_documents()
         if not documents:

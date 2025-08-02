@@ -63,7 +63,9 @@ This project implements a Retrieval-Augmented Generation (RAG) system using the 
 
 ## Usage
 
-# FAISS-based RAG System
+### Option 1: Command Line Interface (CLI)
+
+#### FAISS-based RAG System
 
 1. Place your PDF files in the `docs` directory.
 
@@ -77,17 +79,66 @@ This project implements a Retrieval-Augmented Generation (RAG) system using the 
 
 4. To exit, type `quit` or `exit`.
 
-# ChromaDB-based RAG System
+#### ChromaDB-based RAG System
 
 - same as above, just in step 2, run the following command instead:
   ```bash
   python rag-chromadb.py
   ```
 
+### Option 2: Web API (Recommended)
+
+#### FastAPI Web Service
+
+1. Place your PDF files in the `docs` directory.
+
+2. Start the API server:
+
+   ```bash
+   python api.py
+   ```
+
+3. The API will be available at `http://localhost:8000`
+
+4. **Web Interface**: Open `web_interface.html` in your browser for a user-friendly interface.
+
+5. **API Documentation**: Visit `http://localhost:8000/docs` for interactive API documentation.
+
+#### API Endpoints
+
+- **POST `/query`**: Submit a question to get an answer
+
+  ```json
+  {
+    "question": "What is the main topic of the document?",
+    "model_name": "gemini-2.5-pro" // optional
+  }
+  ```
+
+- **GET `/status`**: Check system status and document count
+
+- **POST `/reinitialize`**: Reload documents (useful when adding new PDFs)
+
+- **GET `/health`**: Simple health check
+
+#### Example API Usage
+
+```bash
+# Check system status
+curl http://localhost:8000/status
+
+# Submit a query
+curl -X POST "http://localhost:8000/query" \
+     -H "Content-Type: application/json" \
+     -d '{"question": "What are the key features mentioned in the documents?"}'
+```
+
 ## Project Structure
 
 - `index.py`: Main script containing the RAG system implementation using FAISS.
 - `rag-chromadb.py`: Main script for the ChromaDB-based RAG system.
+- `api.py`: FastAPI web service for the RAG system.
+- `web_interface.html`: Simple web interface for interacting with the API.
 - `docs/`: Directory to store PDF files for processing.
 - `.env`: Environment file for storing API keys.
 - `requirements.txt`: List of dependencies.
