@@ -25,14 +25,20 @@ export default function FileManager({ onFilesChanged }: FileManagerProps) {
   const [files, setFiles] = useState<FileInfo[]>([]);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [deletingFiles, setDeletingFiles] = useState<Set<string>>(new Set());
+  const [clearingAll, setClearingAll] = useState(false);
+  const [loadingFiles, setLoadingFiles] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadFiles = async () => {
+    setLoadingFiles(true);
     try {
       const response = await axios.get("http://localhost:8000/files");
       setFiles(response.data.files);
     } catch (error) {
       console.error("Error loading files:", error);
+    } finally {
+      setLoadingFiles(false);
     }
   };
 
@@ -106,6 +112,9 @@ export default function FileManager({ onFilesChanged }: FileManagerProps) {
   const handleDeleteFile = async (filename: string) => {
     if (!confirm(`Delete ${filename}?`)) return;
 
+    // Add file to deleting state
+    setDeletingFiles((prev) => new Set(prev).add(filename));
+
     try {
       await axios.delete(`http://localhost:8000/files/${filename}`);
       await loadFiles();
@@ -113,12 +122,20 @@ export default function FileManager({ onFilesChanged }: FileManagerProps) {
     } catch (error) {
       console.error("Error deleting file:", error);
       alert("Error deleting file. Please try again.");
+    } finally {
+      // Remove file from deleting state
+      setDeletingFiles((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(filename);
+        return newSet;
+      });
     }
   };
 
   const handleClearAll = async () => {
     if (!confirm("Delete all files? This cannot be undone.")) return;
 
+    setClearingAll(true);
     try {
       await axios.post("http://localhost:8000/clear-files");
       await loadFiles();
@@ -126,6 +143,8 @@ export default function FileManager({ onFilesChanged }: FileManagerProps) {
     } catch (error) {
       console.error("Error clearing files:", error);
       alert("Error clearing files. Please try again.");
+    } finally {
+      setClearingAll(false);
     }
   };
 
@@ -156,10 +175,19 @@ export default function FileManager({ onFilesChanged }: FileManagerProps) {
         {files.length > 0 && (
           <button
             onClick={handleClearAll}
-            className="text-sm text-red-600 hover:text-red-700 flex items-center gap-1"
+            disabled={clearingAll}
+            className={`text-sm flex items-center gap-1 transition-colors ${
+              clearingAll
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-red-600 hover:text-red-700"
+            }`}
           >
-            <Trash2 className="w-4 h-4" />
-            Clear All
+            {clearingAll ? (
+              <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4" />
+            )}
+            {clearingAll ? "Clearing..." : "Clear All"}
           </button>
         )}
       </div>
@@ -231,10 +259,23 @@ export default function FileManager({ onFilesChanged }: FileManagerProps) {
                 </div>
                 <button
                   onClick={() => handleDeleteFile(file.filename)}
-                  className="text-gray-400 hover:text-red-500 transition-colors"
-                  title={`Delete ${file.filename}`}
+                  disabled={deletingFiles.has(file.filename)}
+                  className={`transition-colors ${
+                    deletingFiles.has(file.filename)
+                      ? "text-gray-300 cursor-not-allowed"
+                      : "text-gray-400 hover:text-red-500"
+                  }`}
+                  title={
+                    deletingFiles.has(file.filename)
+                      ? "Deleting..."
+                      : `Delete ${file.filename}`
+                  }
                 >
-                  <X className="w-4 h-4" />
+                  {deletingFiles.has(file.filename) ? (
+                    <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <X className="w-4 h-4" />
+                  )}
                 </button>
               </div>
             ))}
@@ -242,7 +283,14 @@ export default function FileManager({ onFilesChanged }: FileManagerProps) {
         </div>
       )}
 
-      {files.length === 0 && !uploading && (
+      {loadingFiles && (
+        <div className="mt-6 text-center">
+          <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto mb-2" />
+          <p className="text-sm text-gray-500">Loading files...</p>
+        </div>
+      )}
+
+      {files.length === 0 && !uploading && !loadingFiles && (
         <div className="mt-6 text-center">
           <AlertCircle className="w-8 h-8 text-gray-300 mx-auto mb-2" />
           <p className="text-sm text-gray-500">No documents uploaded yet</p>
