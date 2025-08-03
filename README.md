@@ -15,6 +15,7 @@ A modern Retrieval-Augmented Generation (RAG) system that allows users to upload
 ## 🏗️ Architecture
 
 ### Backend (`/backend`)
+
 - **FastAPI**: High-performance API framework
 - **FAISS**: Vector similarity search for document retrieval
 - **LangChain**: Document processing and AI integration
@@ -22,6 +23,7 @@ A modern Retrieval-Augmented Generation (RAG) system that allows users to upload
 - **Sentence Transformers**: Text embeddings for semantic search
 
 ### Frontend (`/frontend`)
+
 - **React + TypeScript**: Modern, type-safe frontend
 - **Vite**: Fast development and build tool
 - **Tailwind CSS**: Utility-first CSS framework
@@ -31,17 +33,20 @@ A modern Retrieval-Augmented Generation (RAG) system that allows users to upload
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Python 3.8+
 - Node.js 18+
 - Google AI API Key
 
 ### 1. Clone Repository
+
 ```bash
 git clone https://github.com/talalaslam15/rag-system.git
 cd rag-system
 ```
 
 ### 2. Backend Setup
+
 ```bash
 cd backend
 
@@ -68,6 +73,7 @@ python api.py
 The backend will be available at `http://localhost:8000`
 
 ### 3. Frontend Setup
+
 ```bash
 cd frontend
 
@@ -107,17 +113,20 @@ rag-system/
 ## 🔧 API Endpoints
 
 ### Document Management
+
 - `POST /upload` - Upload multiple files
 - `GET /files` - List all uploaded files
 - `DELETE /files/{filename}` - Delete a specific file
 - `POST /clear-files` - Clear all uploaded files
 
 ### RAG System
+
 - `POST /query` - Ask questions about documents
 - `GET /status` - Get system status
 - `POST /reinitialize` - Reinitialize the RAG system
 
 ### System
+
 - `GET /health` - Health check
 - `GET /` - API information
 
@@ -131,11 +140,13 @@ rag-system/
 ## 🔧 Configuration
 
 ### Environment Variables
+
 - `GOOGLE_API_KEY`: Required for Google Gemini AI integration
 - `UPLOAD_DIR`: Directory for document storage (default: "docs")
 - `MAX_FILE_SIZE`: Maximum file size in bytes (default: 50MB)
 
 ### Supported File Types
+
 - PDF documents (.pdf)
 - Word documents (.docx)
 - Text files (.txt)
@@ -149,6 +160,7 @@ rag-system/
 ## 🔮 Pending Features
 
 ### 📋 Roadmap
+
 - [ ] **Chat History**: Maintain conversation history across sessions
 - [ ] **Multi-Model Support**: Add support for additional LLM providers
   - [ ] OpenAI GPT models
@@ -179,16 +191,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Common Issues
 
 **API Timeouts**
+
 - Increase timeout values in frontend API clients
 - Check server logs for processing errors
 - Ensure documents aren't too large
 
 **Document Processing Errors**
+
 - Verify file format is supported
 - Check file isn't corrupted
 - Ensure sufficient disk space
 
 **Connection Issues**
+
 - Verify backend is running on port 8000
 - Check CORS settings
 - Ensure Google API key is valid
