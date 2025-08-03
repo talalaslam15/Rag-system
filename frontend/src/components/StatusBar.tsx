@@ -1,5 +1,4 @@
 import { RefreshCw } from "lucide-react";
-import "./StatusBar.css";
 
 interface SystemStatus {
   status: string;
@@ -14,16 +13,16 @@ interface StatusBarProps {
 }
 
 export default function StatusBar({ status, onRefresh }: StatusBarProps) {
-  const getStatusColor = () => {
+  const getStatusStyles = () => {
     switch (status.status) {
       case "ready":
-        return "status-ready";
+        return "bg-gradient-to-r from-green-500 to-emerald-600 text-white";
       case "error":
-        return "status-error";
+        return "bg-gradient-to-r from-red-500 to-rose-600 text-white";
       case "initializing":
-        return "status-initializing";
+        return "bg-gradient-to-r from-amber-500 to-orange-600 text-white";
       default:
-        return "status-checking";
+        return "bg-gradient-to-r from-gray-500 to-slate-600 text-white";
     }
   };
 
@@ -40,22 +39,27 @@ export default function StatusBar({ status, onRefresh }: StatusBarProps) {
     }
   };
 
+  const getStatusText = () => {
+    if (status.status === "ready") {
+      return `System Ready • ${status.documents_loaded} documents loaded`;
+    }
+    return status.message;
+  };
+
   return (
-    <div className={`status-bar ${getStatusColor()}`}>
-      <div className="status-content">
-        <span className="status-icon">{getStatusIcon()}</span>
-        <span className="status-text">
-          {status.status === "ready"
-            ? `System Ready • ${status.documents_loaded} documents loaded`
-            : status.message}
-        </span>
+    <div
+      className={`flex items-center justify-between p-4 rounded-xl shadow-sm transition-all duration-200 ${getStatusStyles()}`}
+    >
+      <div className="flex items-center gap-3">
+        <span className="text-lg">{getStatusIcon()}</span>
+        <span className="font-medium">{getStatusText()}</span>
       </div>
       <button
-        className="refresh-button"
         onClick={onRefresh}
+        className="p-2 rounded-lg hover:bg-white/10 transition-colors duration-200"
         title="Refresh status"
       >
-        <RefreshCw size={16} />
+        <RefreshCw className="w-4 h-4" />
       </button>
     </div>
   );
