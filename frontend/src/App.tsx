@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ChatInterface from "./components/ChatInterface";
 import StatusBar from "./components/StatusBar";
-import "./App.css";
+import FileManager from "./components/FileManager";
 
 interface SystemStatus {
   status: string;
@@ -23,6 +23,7 @@ function App() {
       const response = await fetch("http://localhost:8000/status");
       const data = await response.json();
       setSystemStatus(data);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setSystemStatus({
         status: "error",
@@ -41,9 +42,19 @@ function App() {
   }, []);
 
   return (
-    <div className="app">
-      <StatusBar status={systemStatus} onRefresh={checkStatus} />
-      <ChatInterface systemStatus={systemStatus} />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4">
+      <div className="max-w-6xl mx-auto">
+        <StatusBar status={systemStatus} onRefresh={checkStatus} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
+          <div className="lg:col-span-1">
+            <FileManager onFilesChanged={checkStatus} />
+          </div>
+          <div className="lg:col-span-3">
+            <ChatInterface systemStatus={systemStatus} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
